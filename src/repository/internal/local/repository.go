@@ -2,24 +2,41 @@ package local
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
+
+	"github.com/miroslavLalev/cloudsync/src/repository/file"
 )
 
 type Repository struct {
 	rootPath string
 }
 
-func (r Repository) CreateDir(uri string) {
-	os.Mkdir(r.buildPath(uri), 0440)
+func (r Repository) CreateDir(uri string) error {
+	return os.Mkdir(r.buildPath(uri), 0664)
 }
 
-func (r Repository) Remove(uri string) {
-	os.Remove(r.buildPath(uri))
+func (r Repository) Remove(uri string) error {
+	return os.Remove(r.buildPath(uri))
 }
 
 func (r Repository) CreateFile(uri string) {
-	// TODO: 0644 instead 0666
 	os.Create(r.buildPath(uri))
+}
+
+func (r Repository) ListContent(uri string) ([]*file.File, error) {
+	files, err := ioutil.ReadDir(r.buildPath(uri))
+	return wrapFiles(r.buildPath(uri), files), err
+}
+
+func wrapFiles(basePath string, files []os.FileInfo) []*file.File {
+	result := []*file.File{}
+	for _, f := range files {
+		result = append(result, file.NewFile(f.Name(), filepath.Base(f.Name()), f.IsDir()))
+	}
+
+	return result
 }
 
 func (r Repository) UploadFile(uri string, content []byte) {
@@ -48,7 +65,7 @@ func (r Repository) CreateLink(from, to string) {
 }
 
 func (r Repository) buildPath(uri string) string {
-	return r.rootPath + uri
+	return r.rootPath + "/" + uri
 }
 
 func NewRepository(rootPath string) *Repository {

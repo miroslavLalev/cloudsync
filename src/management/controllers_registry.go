@@ -9,6 +9,10 @@ type ControllersRegistry struct {
 	rc ResourceController
 }
 
+func (r *ControllersRegistry) GetSpaceController() SpaceController {
+	return r.sc
+}
+
 func GetRegistry() *ControllersRegistry {
 	return registry
 }

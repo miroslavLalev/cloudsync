@@ -1,14 +1,43 @@
 package objects
 
+type Type string
+
+const (
+	File Type = "FILE"
+	Dir  Type = "DIR"
+)
+
 type Resource struct {
-	path  string
-	space Space
+	id        string
+	name      string
+	rtype     Type
+	resources []Resource
 }
 
-func (resource *Resource) Path() string {
-	return resource.path
+func (resource *Resource) Id() string {
+	return resource.id
 }
 
-func (resource *Resource) Space() Space {
-	return resource.space
+func (resource *Resource) Name() string {
+	return resource.name
+}
+
+// func (resource *Resource) Space() Space {
+// 	return resource.space
+// }
+
+func (resource *Resource) Type() Type {
+	return resource.rtype
+}
+
+func (resource *Resource) Resources() []Resource {
+	return resource.resources
+}
+
+func NewResource(id, name string, rtype Type) *Resource {
+	return &Resource{
+		id:    id,
+		name:  name,
+		rtype: rtype,
+	}
 }

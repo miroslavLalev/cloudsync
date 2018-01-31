@@ -4,18 +4,20 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/miroslavLalev/cloudsync/src/repository/file"
 	"github.com/miroslavLalev/cloudsync/src/repository/internal/local"
 )
 
 const repoPathVariable string = "REPO"
 
-// TODO: consider generic naming like "sections" and "resources" (abstract away from storage)
 type RepositoryFacade interface {
-	CreateDir(uri string)
+	CreateDir(uri string) error
 
 	CreateFile(uri string)
 
-	Remove(uri string)
+	ListContent(uri string) ([]*file.File, error)
+
+	Remove(uri string) error
 
 	UploadFile(uri string, content []byte)
 
