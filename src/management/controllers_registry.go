@@ -13,6 +13,10 @@ func (r *ControllersRegistry) GetSpaceController() SpaceController {
 	return r.sc
 }
 
+func (r *ControllersRegistry) GetResourceController() ResourceController {
+	return r.rc
+}
+
 func GetRegistry() *ControllersRegistry {
 	return registry
 }

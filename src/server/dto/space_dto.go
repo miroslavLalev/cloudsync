@@ -17,7 +17,7 @@ func NewSpace(s *objects.Space) *SpaceDto {
 func transformResources(resources []*objects.Resource) []*ResourceDto {
 	result := []*ResourceDto{}
 	for _, r := range resources {
-		result = append(result, NewResourceDto(r.Id(), r.Name(), string(r.Type())))
+		result = append(result, NewResource(r.Id(), r.Name(), string(r.Type())))
 	}
 
 	return result

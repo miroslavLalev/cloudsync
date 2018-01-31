@@ -25,15 +25,24 @@ func (r Repository) CreateFile(uri string) {
 	os.Create(r.buildPath(uri))
 }
 
-func (r Repository) ListContent(uri string) ([]*file.File, error) {
-	files, err := ioutil.ReadDir(r.buildPath(uri))
-	return wrapFiles(r.buildPath(uri), files), err
+func (r Repository) GetFile(uri string) (*file.File, error) {
+	f, err := os.Stat(r.buildPath(uri))
+	return warpFile(f), err
 }
 
-func wrapFiles(basePath string, files []os.FileInfo) []*file.File {
+func warpFile(f os.FileInfo) *file.File {
+	return file.NewFile(f.Name(), filepath.Base(f.Name()), f.IsDir())
+}
+
+func (r Repository) ListContent(uri string) ([]*file.File, error) {
+	files, err := ioutil.ReadDir(r.buildPath(uri))
+	return wrapFiles(files), err
+}
+
+func wrapFiles(files []os.FileInfo) []*file.File {
 	result := []*file.File{}
 	for _, f := range files {
-		result = append(result, file.NewFile(f.Name(), filepath.Base(f.Name()), f.IsDir()))
+		result = append(result, warpFile(f))
 	}
 
 	return result

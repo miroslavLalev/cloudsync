@@ -15,6 +15,8 @@ type RepositoryFacade interface {
 
 	CreateFile(uri string)
 
+	GetFile(uri string) (*file.File, error)
+
 	ListContent(uri string) ([]*file.File, error)
 
 	Remove(uri string) error
